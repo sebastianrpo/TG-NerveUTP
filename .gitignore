@@ -1,0 +1,19 @@
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Modelos y pesos entrenados
+*.pth
+*.pt
+
+# Base de datos e imágenes
+NerveUTP/
+Dataset/
+*.jpg
+*.png
+
+# Entornos virtuales
+venv/
+env/
+.env
