@@ -6,7 +6,7 @@ import torch.nn.functional as F
 def expmap0(x, c):
     """
     Mapa exponencial: Proyecta vectores del espacio euclidiano a la Bola de Poincaré.
-    Ecuación 4 del artículo.
+    (Ecuación 4 del artículo).
     """
     c_tensor = torch.tensor(c, device=x.device, dtype=x.dtype)
     sqrt_c = torch.sqrt(c_tensor)
@@ -18,7 +18,7 @@ def expmap0(x, c):
 class TractableHyperbolicClassifier(nn.Module):
     """
     Clasificador a nivel de píxel usando regresión logística multinomial hiperbólica.
-    Implementa la versión tratable en memoria del artículo.
+    (Implementa la versión tratable en memoria del artículo.)
     """
     def __init__(self, in_features, num_classes, c=0.1):
         super().__init__()
@@ -81,7 +81,7 @@ class TractableHyperbolicClassifier(nn.Module):
 
         return torch.cat(logits, dim=1)
 
-# 2. Reutilizamos el bloque DoubleConv de tu U-Net original
+# 2. Reutilizamos el bloque DoubleConv de la U-Net original
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
@@ -125,7 +125,7 @@ class HyperbolicUNet(nn.Module):
         # Capa de reducción de dimensiones (Ej. de 64 a 3 canales)
         self.to_embed_dim = nn.Conv2d(64, embed_dim, kernel_size=1)
         
-        # NUEVO: Clasificador Hiperbólico final
+        #Clasificador Hiperbólico final
         self.hyperbolic_out = TractableHyperbolicClassifier(in_features=embed_dim, num_classes=n_classes, c=c)
 
     def forward(self, x):

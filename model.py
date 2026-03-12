@@ -54,8 +54,6 @@ class UNet(nn.Module):
         self.conv4 = DoubleConv(128, 64)
 
         # --- Capa de Salida Euclidiana ---
-        # NOTA: En tu modelo propuesto, reemplazaremos o extenderemos esta capa 
-        # para mapear las características (features) al espacio hiperbólico/indefinido.
         self.outc = nn.Conv2d(64, n_classes, kernel_size=1)
 
     def forward(self, x):

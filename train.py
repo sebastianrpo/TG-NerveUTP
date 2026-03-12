@@ -6,8 +6,6 @@ import torch.optim as optim
 from tqdm import tqdm
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-
-# Importamos nuestros módulos personalizados
 from model import UNet
 from dataset import get_dataloaders
 from utils import calculate_metrics, save_checkpoint

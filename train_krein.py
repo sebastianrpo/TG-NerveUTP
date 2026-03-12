@@ -107,7 +107,6 @@ def val_fn(loader, model, loss_fn):
 def main():
     print(f"=> Iniciando entrenamiento de Modelo de Kreïn en: {DEVICE.upper()}")
     
-    # Transformación limpia: Sin A.Normalize porque dataset.py ya lo hace
     transform = A.Compose([
         A.Resize(height=256, width=256),
         ToTensorV2()
