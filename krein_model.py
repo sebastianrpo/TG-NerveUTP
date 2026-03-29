@@ -5,16 +5,31 @@ import numpy as np
 from model import DoubleConv  # U-net Clásica
 
 # --- 1. Subespacio Positivo (Kernel RBF) ---
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+
 class RBFRFF(nn.Module):
     def __init__(self, in_features, out_features, gamma=1.0):
         super().__init__()
         self.out_features = out_features
-        # Hacemos los pesos entrenables
-        self.W = nn.Parameter(torch.randn(out_features, in_features) * gamma, requires_grad=True)
-        self.b = nn.Parameter(torch.rand(out_features) * 2 * np.pi, requires_grad=True)
+        
+        # 1. Gamma ahora es el único parámetro entrenable
+        self.gamma = nn.Parameter(torch.tensor(float(gamma)))
+        
+        # 2. W_base se registra como buffer (fijo, no entrenable)
+        # Se inicializa con una distribución normal estándar
+        self.register_buffer('W_base', torch.randn(out_features, in_features))
+        
+        # 3. b se registra como buffer (fijo, no entrenable)
+        # Se inicializa con una distribución uniforme [0, 2π]
+        self.register_buffer('b', torch.rand(out_features) * 2 * np.pi)
 
     def forward(self, x):
-        proj = F.linear(x, self.W) + self.b
+        # 4. Escalamos W_base por el gamma entrenable dinámicamente
+        W_effective = self.W_base * self.gamma
+        proj = F.linear(x, W_effective) + self.b
         return torch.cos(proj) * np.sqrt(2.0 / self.out_features)
 
 # --- 2. Subespacio Negativo (Kernel Polinomial) ---
@@ -23,8 +38,10 @@ class PolynomialRFF(nn.Module):
         super().__init__()
         self.out_features = out_features
         self.degree = degree
-        # Proyección lineal inspirada en Spherical Random Features
-        self.W = nn.Parameter(torch.randn(out_features, in_features), requires_grad=True)
+        
+        # CORRECCIÓN: W debe ser fijo para garantizar la aproximación del kernel.
+        # Se registra como buffer para que no se actualice con backpropagation.
+        self.register_buffer('W', torch.randn(out_features, in_features))
 
     def forward(self, x):
         proj = F.linear(x, self.W)
@@ -51,8 +68,8 @@ class KreinClassifier(nn.Module):
         phi_neg = self.rff_neg(x_perm).permute(0, 3, 1, 2) # [B, dim_neg, H, W]
 
         # Producto interno indefinido: <w, phi>_K = w_pos * phi_pos - w_neg * phi_neg
-        logit_pos = torch.sum(self.w_pos * phi_pos, dim=1, keepdim=True)
-        logit_neg = torch.sum(self.w_neg * phi_neg, dim=1, keepdim=True)
+        logit_pos = F.conv2d(phi_pos, self.w_pos)
+        logit_neg = F.conv2d(phi_neg, self.w_neg)
         
         # LA MAGIA DEL ESPACIO INDEFINIDO:
         logits = logit_pos - logit_neg + self.bias.view(1, -1, 1, 1)

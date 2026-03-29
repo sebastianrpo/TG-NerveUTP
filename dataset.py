@@ -61,7 +61,7 @@ class NerveUTPDataset(Dataset):
             image_tensor = torch.from_numpy(image).unsqueeze(0) 
             mask_tensor = torch.from_numpy(mask).unsqueeze(0)
 
-        return image_tensor, mask_tensor
+        return image_tensor, mask_tensor, img_name
 
 # --- Implementación y Transformaciones ---
 # Definimos el pipeline de transformaciones
@@ -94,22 +94,23 @@ def get_dataloaders(data_dir, transform, batch_size=8):
     )
     
     # 4. Crear los DataLoaders (solo se mezcla el de entrenamiento)
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=2)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=2)
+    test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=2)
     
     return train_loader, val_loader, test_loader
 
 #data_folder = r'C:\Users\srestrepo01\Documents\TG\NerveUTP' #PC TRABAJO
 data_folder = r'C:\Users\Sebas\Documents\Dataset'  #PC PERSONAL
+#data_folder = r'/content/drive/MyDrive/TG_NerveUTP/NerveUTP'
 
 # Instanciamos el dataset con las transformaciones
 nerve_dataset = NerveUTPDataset(data_dir=data_folder, transform=train_transform)
 train_loader = DataLoader(nerve_dataset, batch_size=8, shuffle=True, num_workers=0)
 
 if __name__ == '__main__':
-    #data_folder = r'C:\Users\srestrepo01\Documents\TG\NerveUTP' #PC TRABAJO
-    data_folder = r'C:\Users\Sebas\Documents\Dataset'            #PC PERSONAL
+    data_folder = r'C:\Users\srestrepo01\Documents\TG\NerveUTP' #PC TRABAJO
+    #data_folder = r'C:\Users\Sebas\Documents\Dataset'            #PC PERSONAL
     # Llamamos a la nueva función
     train_loader, val_loader, test_loader = get_dataloaders(data_folder, train_transform)
     

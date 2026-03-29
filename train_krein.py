@@ -114,8 +114,8 @@ def main():
 
     train_loader, val_loader, test_loader = get_dataloaders(DATA_DIR, transform, BATCH_SIZE)
 
-    # Inicializamos la red con 128 dimensiones para el kernel RBF y 64 para el polinomial
-    model = KreinUNet(n_channels=1, n_classes=1, dim_pos=128, dim_neg=64).to(DEVICE)
+    # Inicializamos la red con 1024 dimensiones para el kernel RBF y 512 para el polinomial
+    model = KreinUNet(n_channels=1, n_classes=1, dim_pos=1024, dim_neg=512).to(DEVICE)
     loss_fn = KreinDiceBCELoss(krein_lambda=0.05)
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 

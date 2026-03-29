@@ -44,7 +44,7 @@ def main():
     #Seleccionar una imagen aleatoria del set de prueba
     dataset = test_loader.dataset
     idx = random.randint(0, len(dataset) - 1)
-    image_tensor, mask_tensor = dataset[idx]
+    image_tensor, mask_tensor, img_name = dataset[idx]
     
     #Realizar la predicción
     embeddings.clear() # Limpiar embeddings de corridas anteriores
@@ -97,6 +97,7 @@ def main():
     
     plt.tight_layout()
     plt.show()
+    print(f"[*] Visualizando imagen: {img_name}")
 
 if __name__ == '__main__':
     main()

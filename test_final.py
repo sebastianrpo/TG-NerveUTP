@@ -39,7 +39,6 @@ def evaluate_model(model, loader, model_name):
 
 def main():
     print("=> Preparando datos de prueba (Test Set 15% inédito)...")
-    # Transformación limpia: Sin A.Normalize (el dataset.py ya se encarga)
     transform = A.Compose([A.Resize(height=256, width=256), ToTensorV2()])
     _, _, test_loader = get_dataloaders(DATA_DIR, transform, batch_size=8)
     

@@ -11,15 +11,15 @@ from dataset import get_dataloaders
 # --- Configuración ---
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-DATA_DIR = r'C:\Users\Sebas\Documents\Dataset'
-#DATA_DIR = r'C:\Users\srestrepo01\Documents\TG\NerveUTP'
+#DATA_DIR = r'C:\Users\Sebas\Documents\Dataset'
+DATA_DIR = r'C:\Users\srestrepo01\Documents\TG\NerveUTP'
 MODEL_PATH = "unet_krein_best.pth"
 
 def main():
     print(f"=> Cargando modelo Pseudo-Euclidiano (Kreïn) desde {MODEL_PATH}...")
     
     # 1. Cargar la arquitectura y los pesos
-    model = KreinUNet(n_channels=1, n_classes=1, dim_pos=128, dim_neg=64).to(DEVICE)
+    model = KreinUNet(n_channels=1, n_classes=1, dim_pos=1024, dim_neg=512).to(DEVICE)
     try:
         checkpoint = torch.load(MODEL_PATH, map_location=DEVICE, weights_only=False)
         model.load_state_dict(checkpoint['state_dict'])
@@ -44,7 +44,7 @@ def main():
     # Seleccionar una imagen aleatoria
     dataset = test_loader.dataset
     idx = random.randint(0, len(dataset) - 1)
-    image_tensor, mask_tensor = dataset[idx]
+    image_tensor, mask_tensor, img_name = dataset[idx]
     
     # 4. Realizar la predicción y extraer mapas de energía
     embeddings.clear()
@@ -107,6 +107,7 @@ def main():
     
     plt.tight_layout()
     plt.show()
+    print(f"[*] Visualizando imagen: {img_name}")
 
 if __name__ == '__main__':
     main()
