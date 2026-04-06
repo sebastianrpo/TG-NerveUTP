@@ -11,8 +11,8 @@ from dataset import get_dataloaders
 # --- Configuración ---
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-#DATA_DIR = r'C:\Users\Sebas\Documents\Dataset'
-DATA_DIR = r'C:\Users\srestrepo01\Documents\TG\NerveUTP'
+DATA_DIR = r'C:\Users\Sebas\Documents\Dataset'
+#DATA_DIR = r'C:\Users\srestrepo01\Documents\TG\NerveUTP'
 MODEL_PATH = "unet_krein_best.pth"
 
 def main():

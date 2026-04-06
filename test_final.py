@@ -21,7 +21,7 @@ def evaluate_model(model, loader, model_name):
     loop = tqdm(loader, desc=f"Evaluando {model_name}")
 
     with torch.no_grad():
-        for data, targets in loop:
+        for data, targets, _ in loop:
             data = data.to(device=DEVICE)
             targets = targets.float().to(device=DEVICE)
 
@@ -66,7 +66,7 @@ def main():
 
     # 3. Evaluar U-Net Pseudo-Euclidiana (Kreïn)
     print("\n=> 3. Cargando U-Net Pseudo-Euclidiana (Kreïn)...")
-    model_krein = KreinUNet(n_channels=1, n_classes=1, dim_pos=128, dim_neg=64).to(DEVICE)
+    model_krein = KreinUNet(n_channels=1, n_classes=1, dim_pos=1024, dim_neg=512).to(DEVICE)
     try:
         checkpoint = torch.load("unet_krein_best.pth", map_location=DEVICE, weights_only=False)
         model_krein.load_state_dict(checkpoint['state_dict'])

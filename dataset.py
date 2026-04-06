@@ -109,8 +109,8 @@ nerve_dataset = NerveUTPDataset(data_dir=data_folder, transform=train_transform)
 train_loader = DataLoader(nerve_dataset, batch_size=8, shuffle=True, num_workers=0)
 
 if __name__ == '__main__':
-    data_folder = r'C:\Users\srestrepo01\Documents\TG\NerveUTP' #PC TRABAJO
-    #data_folder = r'C:\Users\Sebas\Documents\Dataset'            #PC PERSONAL
+    #data_folder = r'C:\Users\srestrepo01\Documents\TG\NerveUTP' #PC TRABAJO
+    data_folder = r'C:\Users\Sebas\Documents\Dataset'            #PC PERSONAL
     # Llamamos a la nueva función
     train_loader, val_loader, test_loader = get_dataloaders(data_folder, train_transform)
     
